@@ -1,0 +1,57 @@
+/* ============================================================
+   CavaLocal — Overlay de checkout (reserva → datos → pago → factura).
+   Marca pineada (burdeos/oro/crema). El oro se usa con restricción.
+   ============================================================ */
+.co-bg { position: fixed; inset: 0; background: rgba(20,8,12,0.62); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; animation: coFade 0.25s ease; }
+.co-bg.hidden { display: none; }
+.co-modal { background: var(--card); border-radius: var(--radius-xl); border-top: 3px solid var(--gold); width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto; box-shadow: var(--shadow-lg); animation: coRise 0.3s cubic-bezier(0.2,0.7,0.2,1); }
+.co-head { display: flex; align-items: center; justify-content: space-between; padding: 22px 24px 0; }
+.co-head h3 { font-family: var(--font-display); color: var(--wine); font-size: 23px; }
+.co-close { width: 36px; height: 36px; border-radius: 50%; background: var(--surface); color: var(--ink); font-size: 16px; transition: var(--transition); }
+.co-close:hover { background: var(--gold-soft); }
+.co-steps { display: flex; gap: 8px; padding: 16px 24px; }
+.co-steps .st { flex: 1; height: 5px; border-radius: 4px; background: var(--border); transition: var(--transition); }
+.co-steps .st.done { background: var(--gold); }
+.co-steps .st.active { background: var(--wine); }
+.co-body { padding: 4px 24px 24px; }
+.co-prod { display: flex; gap: 14px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 16px; }
+.co-prod .nm { font-weight: 800; font-size: 15px; }
+.co-prod .wn { font-size: 11px; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: .6px; }
+.co-field { margin-bottom: 14px; }
+.co-field label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.co-field input, .co-field select { width: 100%; height: 46px; border: 1px solid var(--border); background: var(--surface); border-radius: var(--radius-md); padding: 0 13px; font-size: 15px; outline: none; transition: border-color .25s, box-shadow .25s; }
+.co-field input:focus, .co-field select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-soft); background: #fff; }
+.co-field input.invalid { border-color: var(--danger); }
+.co-row { display: flex; gap: 12px; }
+.co-row > * { flex: 1; }
+.co-summary { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; margin: 8px 0 16px; font-size: 14px; }
+.co-summary .ln { display: flex; justify-content: space-between; padding: 3px 0; }
+.co-summary .disc { color: var(--green); }
+.co-summary .tot { border-top: 1px solid var(--border); margin-top: 6px; padding-top: 8px; font-weight: 800; }
+.co-summary .dep { color: var(--wine); font-weight: 800; margin-top: 4px; }
+.co-summary .bal { color: var(--muted); font-size: 13px; }
+.co-error { background: #fbeaea; color: var(--danger); border: 1px solid #f1d4d4; border-radius: var(--radius-md); padding: 10px 13px; font-size: 13px; margin-bottom: 12px; }
+.co-hide { display: none; }
+.co-actions { display: flex; gap: 12px; margin-top: 10px; }
+.co-btn { flex: 1; height: 50px; border-radius: var(--radius-md); font-weight: 800; font-size: 15px; transition: var(--transition); }
+.co-btn.prim { background: var(--wine); color: #fff; box-shadow: 0 8px 20px rgba(100,30,46,0.2); }
+.co-btn.prim:hover { background: var(--wine-soft); }
+.co-btn.prim[disabled] { opacity: .6; cursor: default; box-shadow: none; }
+.co-btn.ghost { background: var(--surface); color: var(--ink); flex: 0 0 38%; }
+.co-btn.ghost:hover { background: var(--gold-soft); }
+.co-ok { text-align: center; padding: 10px 0 4px; }
+.co-ok .check { width: 66px; height: 66px; border-radius: 50%; background: var(--green); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 34px; margin: 0 auto 12px; animation: coPop 0.4s cubic-bezier(0.2,0.9,0.3,1.3); }
+.co-ok h3 { font-family: var(--font-display); color: var(--wine); font-size: 25px; }
+.co-ok p { color: var(--muted); margin: 8px 0 0; line-height: 1.5; }
+@keyframes coFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes coRise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes coPop { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .co-bg, .co-modal, .co-ok .check { animation: none; } }
+@media (max-width: 560px) { .co-row { flex-direction: column; } }
+.co-seg { display: flex; gap: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 50px; padding: 4px; margin-bottom: 16px; }
+.co-segbtn { flex: 1; padding: 9px; border-radius: 50px; font-weight: 700; font-size: 13px; color: var(--muted); }
+.co-segbtn.on { background: var(--wine); color: #fff; }
+.co-minihint { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+.co-mini { height: 180px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); margin-bottom: 10px; z-index: 0; }
+.co-deliv-note { font-size: 13px; color: var(--muted); background: var(--surface); border-radius: var(--radius-md); padding: 10px 12px; margin-bottom: 12px; }
+.co-deliv-note b { color: var(--wine); }

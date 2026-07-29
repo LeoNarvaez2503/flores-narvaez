@@ -1,0 +1,18 @@
+{
+  "name": "cavalocal",
+  "version": "1.0.0",
+  "description": "CavaLocal — Marketplace Premium de Vinos. Landing page con scroll storytelling.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx -y live-server --port=3000 --no-browser",
+    "optimize": "node optimize-images.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "sharp": "^0.35.1"
+  }
+}

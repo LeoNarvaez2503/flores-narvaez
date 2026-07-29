@@ -1,0 +1,38 @@
+# ---------- Dependencias ----------
+node_modules/
+**/node_modules/
+
+# ---------- Entorno y secretos ----------
+.env
+**/.env
+.env.*
+!**/.env.example
+*.local
+
+# ---------- Builds / generados ----------
+dist/
+**/dist/
+**/.prisma/
+**/.expo/
+coverage/
+**/coverage/
+
+# ---------- Logs ----------
+*.log
+**/*.log
+
+# ---------- Trabajo académico y mockups (excluidos a pedido) ----------
+*.docx
+Fotos/
+
+# ---------- Scratch de orquestación (briefs/reports/reviews SDD) ----------
+.superpowers/
+
+# ---------- Dataset de import (no commitear) ----------
+backend/prisma/data/
+
+# ---------- SO / editores ----------
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/

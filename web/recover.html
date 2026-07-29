@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CavaLocal — Recuperar contraseña</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/login.css" />
+</head>
+<body class="login-body">
+  <main class="login-main" style="min-height:100vh">
+    <div class="login-card">
+      <div class="login-mark-sm" aria-hidden="true">
+        <svg viewBox="0 0 100 132" width="30" height="40">
+          <path d="M50 6 C26 6 7 25 7 49 C7 79 50 120 50 120 C50 120 93 79 93 49 C93 25 74 6 50 6 Z" fill="#641E2E"/>
+          <path d="M35 30 H65 C65 48 57 57 50 58 C43 57 35 48 35 30 Z" fill="#fff"/>
+          <rect x="48.5" y="58" width="3" height="18" fill="#fff"/>
+          <ellipse cx="50" cy="77" rx="10" ry="2.6" fill="#fff"/>
+        </svg>
+      </div>
+
+      <h2 id="rc-title">Recuperar contraseña</h2>
+      <p class="login-sub" id="rc-sub">Te enviaremos un enlace a tu correo.</p>
+
+      <form id="rc-form" novalidate>
+        <div class="field" id="rc-field-email">
+          <label for="rc-email">Correo</label>
+          <input id="rc-email" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" />
+        </div>
+        <div class="field" id="rc-field-pass" hidden>
+          <label for="rc-pass">Nueva contraseña</label>
+          <input id="rc-pass" type="password" autocomplete="new-password" placeholder="Mínimo 6 caracteres" />
+        </div>
+        <div class="login-error" id="rc-error" hidden></div>
+        <button type="submit" class="login-cta" id="rc-submit">Enviar enlace</button>
+      </form>
+
+      <a class="login-back" href="login.html">← Volver al inicio de sesión</a>
+    </div>
+  </main>
+  <script type="module" src="js/recover.js"></script>
+</body>
+</html>

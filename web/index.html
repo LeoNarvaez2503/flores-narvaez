@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CavaLocal — Tu guía de vinos en Caracas</title>
+  <meta name="description" content="Encuentra tu vino ideal al mejor precio, cerca de ti. Vinos nacionales e importados en Caracas." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/checkout.css" />
+  <link rel="stylesheet" href="css/detail.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="container">
+      <div>Vinos seleccionados · Reserva online y retira en la tienda más cercana</div>
+      <div class="topbar-right"><a href="#" data-cat="">Explorar catálogo →</a></div>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container">
+      <a class="brand" href="#" data-cat="">
+        <svg class="logo" viewBox="0 0 100 132" aria-hidden="true">
+          <path d="M50 6 C26 6 7 25 7 49 C7 79 50 120 50 120 C50 120 93 79 93 49 C93 25 74 6 50 6 Z" fill="#641E2E"/>
+          <path d="M35 30 H65 C65 48 57 57 50 58 C43 57 35 48 35 30 Z" fill="#fff"/>
+          <path d="M38 41 C44 46 56 46 62 41 C61 50 56 55 50 56 C44 55 39 50 38 41 Z" fill="#641E2E"/>
+          <rect x="48.5" y="58" width="3" height="18" fill="#fff"/>
+          <ellipse cx="50" cy="77" rx="10" ry="2.6" fill="#fff"/>
+          <path d="M50 96 L57 102 L50 108 L43 102 Z" fill="#C2912B"/>
+        </svg>
+        <span class="wordmark">CavaLocal</span>
+      </a>
+
+      <div class="nav-search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B7F79" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke-linecap="round"/></svg>
+        <input id="search" type="text" placeholder="Buscar vino, cepa, bodega, país…" autocomplete="off" />
+      </div>
+
+      <div class="nav-actions">
+        <button class="icon-btn" title="Favoritos">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#641E2E" stroke-width="2"><path d="M12 20s-7-4.4-9.3-8.4C1.2 8.7 2.9 5.5 6.2 5.5c1.9 0 3.2 1 3.8 1.9C10.6 6.5 11.9 5.5 13.8 5.5c3.3 0 5 3.2 3.5 6.1C19 15.6 12 20 12 20z"/></svg>
+        </button>
+        <div id="account"><!-- login pill o usuario, render por JS --></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CATEGORY BAR -->
+  <nav class="catbar">
+    <div class="container" id="catbar"></div>
+  </nav>
+
+  <main class="container">
+    <!-- CARRUSEL PROMOCIONAL -->
+    <section class="hero-carousel"><div id="carousel"></div></section>
+
+    <!-- TILES PROMOCIONALES -->
+    <section class="promo-tiles" id="promoTiles"></section>
+
+    <!-- BEST SELLERS -->
+    <section class="section">
+      <div class="section-head">
+        <div><h3>Los más vendidos</h3><div class="sub">Las etiquetas que vuelan de los estantes</div></div>
+      </div>
+      <div class="rail" id="bestsellers"></div>
+    </section>
+
+    <!-- SHOP -->
+    <section class="shop">
+      <aside class="sidebar">
+        <h4>Filtros <span class="clear" id="clearFilters">Limpiar</span></h4>
+        <div id="filters"></div>
+      </aside>
+
+      <div class="shop-main">
+        <div class="sortbar">
+          <div class="count"><b id="resCount">0</b> vinos</div>
+          <div class="sort-opts" id="sortOpts">
+            <span class="lbl">Ordenar:</span>
+            <button class="opt active" data-sort="relevancia">Relevancia</button>
+            <button class="opt" data-sort="precio_asc">Precio</button>
+            <button class="opt" data-sort="calificacion">Calificación</button>
+          </div>
+          <div class="spacer"></div>
+          <div class="modes" id="modes">
+            <button class="mode active" data-mode="lista">Cuadrícula</button>
+            <button class="mode" data-mode="comparar">Comparar</button>
+            <button class="mode" data-mode="mapa">Mapa</button>
+          </div>
+        </div>
+
+        <div id="view"><!-- grid / comparar / mapa por JS --></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="newsletter">
+      <div class="container">
+        <div>
+          <h3>SÚMATE AL CLUB CAVALOCAL</h3>
+          <p>Ofertas, novedades y catas exclusivas en tu correo.</p>
+        </div>
+        <form onsubmit="return false;">
+          <input type="email" placeholder="Tu correo" />
+          <button type="submit">Suscribirme</button>
+        </form>
+      </div>
+    </div>
+    <div class="container footer-grid">
+      <div class="fbrand">
+        <div class="wordmark">CavaLocal</div>
+        <p>Tu guía de vinos local. Encuentra tu etiqueta ideal al mejor precio, cerca de ti, en Caracas.</p>
+      </div>
+      <div><h4>EXPLORAR</h4><ul><li><a href="#" data-cat="">Vinos</a></li><li><a href="#">Bodegas</a></li><li><a href="#">Ofertas</a></li><li><a href="#">Cerca de ti</a></li></ul></div>
+      <div><h4>CAVALOCAL</h4><ul><li><a href="#">Sobre nosotros</a></li><li><a href="#">Cómo funciona</a></li><li><a href="#">Para comercios</a></li><li><a href="#">Contacto</a></li></ul></div>
+      <div><h4>AYUDA</h4><ul><li><a href="#">Preguntas frecuentes</a></li><li><a href="#">Términos</a></li><li><a href="#">Privacidad</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <span>© 2026 CavaLocal C.A. · Caracas, Venezuela</span>
+        <span>Bebé con moderación · Solo para mayores de 18 años</span>
+      </div>
+    </div>
+  </footer>
+
+  <div id="checkout"></div>
+  <div id="detail"></div>
+  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/detail.js"></script>
+</body>
+</html>

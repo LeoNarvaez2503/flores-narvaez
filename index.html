@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CavaLocal — Tu marketplace premium de vinos. Descubre los mejores vinos, directamente de la viña a tu mesa.">
+  <title>CavaLocal — Marketplace Premium de Vinos</title>
+
+  <!-- Premium Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,900;1,6..96,400&family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cormorant:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- PRELOADER -->
+  <div id="preloader">
+    <div class="preloader-logo">CavaLocal</div>
+    <div class="preloader-tagline">Marketplace Premium de Vinos</div>
+    <div class="preloader-bar">
+      <div class="preloader-bar-fill" id="preloader-fill"></div>
+    </div>
+    <div class="preloader-percent" id="preloader-percent">0%</div>
+  </div>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-bar" id="progress-bar"></div>
+
+  <!-- NAVIGATION -->
+  <nav class="nav-bar" id="nav-bar">
+    <a href="#" class="nav-logo">CavaLocal</a>
+    <ul class="nav-links">
+      <li><a href="#origin">Origen</a></li>
+      <li><a href="#craft">Curaduría</a></li>
+      <li><a href="#delivery">Dónde Comprar</a></li>
+      <li><a href="#collection">Cava Virtual</a></li>
+      <li><a href="#experience">Experiencia</a></li>
+      <li><a href="#join">Únete</a></li>
+    </ul>
+  </nav>
+
+  <!-- FIXED VIDEO CANVAS -->
+  <canvas id="video-canvas"></canvas>
+  <!-- FIXED BACKGROUND VIDEOS (storytelling substitutes) -->
+  <div id="bg-video-container">
+    <video id="bg-video-experience" class="bg-story-video" src="assets/video_experience.mp4" loop muted playsinline preload="auto"></video>
+    <video id="bg-video-join" class="bg-story-video" src="assets/video_join.mp4" loop muted playsinline preload="auto"></video>
+  </div>
+  <div id="video-overlay"></div>
+
+  <!-- SCROLL CONTAINER -->
+  <div id="scroll-container">
+
+    <!-- HERO -->
+    <section class="story-section" id="hero">
+      <div class="story-content" id="hero-content" style="opacity:1;transform:none;">
+        <h1 class="hero-title">
+          Cava
+          <span class="hero-accent">Local</span>
+        </h1>
+        <p class="hero-subtitle">Tu guía exclusiva de vinos y dónde encontrarlos en Caracas</p>
+      </div>
+    </section>
+
+    <div class="story-spacer" id="spacer-1"></div>
+
+    <!-- ORIGIN -->
+    <section class="story-section" id="origin">
+      <div class="story-content" id="origin-content">
+        <div class="badge">Desde 2024</div>
+        <div class="section-label">Capítulo I — Tu Guía Premium</div>
+        <h2 class="section-heading">El mapa del<br><em>buen beber</em></h2>
+        <p class="section-subheading">No vendemos vinos. Te mostramos el camino exacto para adquirirlos en la ciudad.</p>
+        <p class="section-body">
+          CavaLocal es el intermediario definitivo entre las marcas más prestigiosas
+          del mundo y los establecimientos de Caracas. Recorremos la ciudad de punta
+          a punta para mapear restaurantes, bodegones y locales especializados, asegurando
+          que tu etiqueta ideal esté siempre a tu alcance.
+        </p>
+        <p class="section-body" style="margin-top:1rem;">
+          Seleccionamos cuidadosamente cada marca y te indicamos en qué rincón de la capital
+          se encuentra disponible, su rango de precios y la experiencia de consumo recomendada.
+          Porque encontrar un gran vino en Caracas no debería ser cuestión de suerte.
+        </p>
+        <div class="section-highlight">Tu brújula vinícola en Caracas</div>
+      </div>
+    </section>
+
+    <div class="story-spacer" id="spacer-2"></div>
+
+    <!-- CRAFT -->
+    <section class="story-section" id="craft">
+      <div class="story-content" id="craft-content">
+        <div class="section-label">Capítulo II — La Curaduría</div>
+        <h2 class="section-heading">El arte de<br><em>elegir</em></h2>
+        <p class="section-subheading">Te llevamos al lugar exacto donde te espera tu botella favorita</p>
+        <p class="section-body">
+          Mapeamos las marcas de mayor prestigio internacional y te indicamos en qué bodegón,
+          tienda de delicatessen o cava privada de Caracas están disponibles en stock.
+          Disfruta de la mejor selección global sin perder tiempo buscando.
+        </p>
+        <p class="section-quote">
+          El vino ideal existe, nosotros te decimos en qué rincón de Caracas se encuentra
+        </p>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 5v2M12 17v2M5 12h2M17 12h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="feature-title">Guía Completa</div>
+            <div class="feature-desc">Detalle exhaustivo de las marcas internacionales más deseadas en la ciudad</div>
+          </li>
+          <li class="feature-item">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6 6v12M10 6v12M14 6v12M18 6v12" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <div class="feature-title">Locales Aliados</div>
+            <div class="feature-desc">Mapeo completo de bodegones, restaurantes y cavas en Las Mercedes, Altamira, Chacao y más</div>
+          </li>
+          <li class="feature-item">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="feature-title">Disponibilidad</div>
+            <div class="feature-desc">Información precisa de dónde comprar e ir a degustar cada botella favorita</div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="story-spacer long" id="spacer-3"></div>
+
+    <!-- IMPACT / STATS -->
+    <section class="story-section" id="impact">
+      <div class="story-content" id="impact-content">
+        <div class="section-label">Presencia Local</div>
+        <h2 class="section-heading">Caracas en<br><em>copas</em></h2>
+        <div class="stats-row">
+          <div>
+            <div class="section-stat" data-count="150">0</div>
+            <div class="section-stat-label">Locales Aliados</div>
+          </div>
+          <div>
+            <div class="section-stat" data-count="500">0</div>
+            <div class="section-stat-label">Marcas Mapeadas</div>
+          </div>
+          <div>
+            <div class="section-stat" data-count="3000">0</div>
+            <div class="section-stat-label">Etiquetas Registradas</div>
+          </div>
+          <div>
+            <div class="section-stat" data-count="15">0</div>
+            <div class="section-stat-label">Zonas Mapeadas</div>
+          </div>
+        </div>
+        <p class="section-body" style="margin-top:2.5rem;">
+          Mapeamos la oferta de las bodegas más destacadas de Argentina, Chile,
+          España, Francia e Italia en los principales locales de la capital.
+          Tu próximo destino vinícola está a la vuelta de la esquina.
+        </p>
+      </div>
+    </section>
+
+    <div class="story-spacer" id="spacer-4"></div>
+
+    <!-- DELIVERY -->
+    <section class="story-section" id="delivery">
+      <div class="story-content" id="delivery-content">
+        <div class="section-label">Capítulo III — Rutas de Compra</div>
+        <h2 class="section-heading">De la viña<br><em>a la copa local</em></h2>
+        <p class="section-subheading">Conectamos las mejores etiquetas globales con los locales de Caracas</p>
+        <p class="section-body">
+          CavaLocal revoluciona tu experiencia vinícola en la capital: consulta la ficha
+          de cualquier vino, conoce su historia y descubre el local o bodegón más
+          cercano a ti para comprarlo al momento o ir a cenar maridando con él.
+        </p>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 8h4l3 5v4h-7V8Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="5.5" cy="18.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="18.5" cy="18.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <div class="feature-title">Cerca de Ti</div>
+            <div class="feature-desc">Ubica en segundos qué bodegón o restaurante de la capital tiene la etiqueta que deseas</div>
+          </li>
+          <li class="feature-item">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3.27 6.96 12 12.01l8.73-5.05M12 22.08V12" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <div class="feature-title">Marcas Globales</div>
+            <div class="feature-desc">Acceso a la información de etiquetas globales importadas formalmente a Venezuela</div>
+          </li>
+          <li class="feature-item">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <div class="feature-title">Estilo de Vida</div>
+            <div class="feature-desc">Recomendaciones exclusivas de maridajes y locales en Caracas para cada ocasión</div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="story-spacer" id="spacer-5"></div>
+
+    <!-- COLLECTION -->
+    <section class="story-section" id="collection">
+      <div class="story-content" id="collection-content">
+        <div class="section-label">Capítulo IV — Tu Cava Virtual</div>
+        <h2 class="section-heading">Explora la<br><em>cava urbana</em></h2>
+        <p class="section-subheading">El catálogo de vinos más grande de Caracas en un solo lugar</p>
+        <p class="section-body">
+          Descubre tintos con cuerpo, blancos refrescantes y espumantes festivos importados
+          y distribuidos en la capital. Te detallamos notas de cata y la lista de bodegones
+          y restaurantes autorizados que los tienen en sus estantes.
+        </p>
+        <p class="section-body" style="margin-top:1rem;">
+          Nuestro equipo mantiene la base de datos actualizada para garantizar que encuentres
+          tu botella en los establecimientos de mayor prestigio y confianza en Caracas.
+        </p>
+        <p class="section-quote">
+          Tu sommelier urbano para recorrer Caracas copa a copa
+        </p>
+        <div class="section-highlight">Directorio actualizado semanalmente</div>
+      </div>
+    </section>
+
+    <div class="story-spacer" id="spacer-6"></div>
+
+    <!-- EXPERIENCE -->
+    <section class="story-section" id="experience">
+      <div class="story-content" id="experience-content">
+        <div class="section-label">Capítulo V — La Experiencia</div>
+        <h2 class="section-heading">Más que<br><em>un directorio</em></h2>
+        <p class="section-subheading">Una comunidad de amantes del vino que vive cada cosecha en Caracas</p>
+        <p class="section-body">
+          CavaLocal es tu consejero digital. Encuentra el restaurante perfecto para esa ocasión
+          especial basándote en la carta de vinos que ofrecen, y obtén sugerencias inteligentes
+          según tu zona y paladar.
+        </p>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 12v5c0 2 2 4 6 4s6-2 6-4v-5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <div class="feature-title">Rutas del Vino</div>
+            <div class="feature-desc">Circuitos de catas y cenas de maridaje organizadas por locales caraqueños</div>
+          </li>
+          <li class="feature-item">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 0-4 4v2h8V6a4 4 0 0 0-4-4Z" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="8" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 8v-1a5 5 0 0 1 10 0v1" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="16" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <div class="feature-title">Recomendador</div>
+            <div class="feature-desc">Sugerencias inteligentes basadas en tu ubicación, presupuesto y gustos en Caracas</div>
+          </li>
+          <li class="feature-item">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5C7 4 7 7 7 7M18 9h1.5a2.5 2.5 0 0 0 0-5C17 4 17 7 17 7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 22h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 14.66V17c0 3 3.6 5 6 5M8 9h8l-1 5.16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="feature-title">Directorio Premium</div>
+            <div class="feature-desc">Acceso a los contactos directos y ubicaciones GPS de las tiendas y restaurantes aliados</div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="story-spacer short" id="spacer-7"></div>
+
+    <!-- CTA / JOIN -->
+    <section class="story-section" id="join">
+      <div class="story-content" id="join-content">
+        <div class="story-divider"></div>
+        <div class="section-label">Únete a CavaLocal</div>
+        <h2 class="section-heading">Tu copa ideal,<br><em>en tu ciudad</em></h2>
+        <p class="section-subheading">Únete a la guía y mapa de cavas de Caracas más completa de Venezuela</p>
+        <p class="section-body">
+          Regístrate hoy para guardar tus vinos favoritos, calificar locales, recibir notificaciones
+          cuando tu etiqueta predilecta llegue a un bodegón de tu zona y acceder a invitaciones para
+          eventos vinícolas y catas privadas en Caracas.
+        </p>
+        <div>
+          <!-- CTA que abre la app CavaLocal (demo). Cambiar la URL al desplegar la app. -->
+          <a href="http://localhost:8081" target="_blank" rel="noopener" class="cta-button" id="cta-explore">Probar la app · Explorar cavas</a>
+        </div>
+        <div>
+          <a href="#" class="cta-button cta-secondary" id="cta-join">Unirme a la guía gratis</a>
+        </div>
+        <p class="social-proof">+50,000 amantes del vino ya usan nuestra guía en Caracas</p>
+      </div>
+    </section>
+
+    <div style="height:30vh;"></div>
+
+  </div>
+
+  <!-- SCROLL INDICATOR -->
+  <div class="scroll-indicator" id="scroll-indicator">
+    <span class="scroll-indicator-text">Desliza</span>
+    <div class="scroll-indicator-line"></div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

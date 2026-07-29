@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CavaLocal — Ingresa a tu cuenta</title>
+  <meta name="description" content="Entra a CavaLocal: descubre vinos, compara precios y reserva en la tienda más cercana." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/login.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body class="login-body">
+  <div class="login-split">
+
+    <!-- IZQUIERDA: lienzo inmersivo -->
+    <aside class="login-aside">
+      <video id="login-cine" class="login-aside-img" src="assets/login-pour.mp4"
+             autoplay muted loop playsinline preload="auto"
+             poster="img/pour/p00.webp"
+             aria-label="Una copa de vino llenándose"></video>
+      <div class="login-aside-grain"></div>
+      <div class="login-aside-overlay"></div>
+
+      <a class="login-brand" href="index.html" aria-label="Volver a la tienda CavaLocal">
+        <svg class="logo" viewBox="0 0 100 132" aria-hidden="true">
+          <path d="M50 6 C26 6 7 25 7 49 C7 79 50 120 50 120 C50 120 93 79 93 49 C93 25 74 6 50 6 Z" fill="#fff"/>
+          <path d="M35 30 H65 C65 48 57 57 50 58 C43 57 35 48 35 30 Z" fill="#641E2E"/>
+          <rect x="48.5" y="58" width="3" height="18" fill="#641E2E"/>
+          <ellipse cx="50" cy="77" rx="10" ry="2.6" fill="#641E2E"/>
+        </svg>
+        <span>CavaLocal</span>
+      </a>
+
+      <div class="login-aside-copy">
+        <span class="login-eyebrow">Tu guía de vinos · Caracas</span>
+        <h1>Cada etiqueta,<br/>cerca de casa.</h1>
+        <p>Descubre vinos, compara precios entre tiendas y reserva en la más cercana. Pagas una seña y retiras cuando quieras.</p>
+      </div>
+    </aside>
+
+    <!-- DERECHA: acceso -->
+    <main class="login-main">
+      <div class="login-card">
+        <div class="login-mark-sm" aria-hidden="true">
+          <svg viewBox="0 0 100 132" width="30" height="40">
+            <path d="M50 6 C26 6 7 25 7 49 C7 79 50 120 50 120 C50 120 93 79 93 49 C93 25 74 6 50 6 Z" fill="#641E2E"/>
+            <path d="M35 30 H65 C65 48 57 57 50 58 C43 57 35 48 35 30 Z" fill="#fff"/>
+            <rect x="48.5" y="58" width="3" height="18" fill="#fff"/>
+            <ellipse cx="50" cy="77" rx="10" ry="2.6" fill="#fff"/>
+          </svg>
+        </div>
+
+        <div class="login-tabs" role="tablist">
+          <button class="login-tab active" data-mode="login" role="tab" aria-selected="true">Iniciar sesión</button>
+          <button class="login-tab" data-mode="register" role="tab" aria-selected="false">Crear cuenta</button>
+          <span class="login-tabs-thumb" aria-hidden="true"></span>
+        </div>
+
+        <h2 id="login-title">Bienvenido de nuevo</h2>
+        <p class="login-sub" id="login-subtitle">Entra para seguir descubriendo vinos.</p>
+
+        <form id="login-form" novalidate>
+          <div class="field" id="field-name" hidden>
+            <label for="in-name">Nombre</label>
+            <input id="in-name" type="text" autocomplete="name" placeholder="Tu nombre" />
+          </div>
+
+          <div class="field">
+            <label for="in-email">Correo</label>
+            <input id="in-email" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" />
+            <small class="hint" id="hint-email"></small>
+          </div>
+
+          <div class="field">
+            <label for="in-pass">Contraseña</label>
+            <div class="pass-wrap">
+              <input id="in-pass" type="password" autocomplete="current-password" placeholder="Tu contraseña" />
+              <button type="button" class="pass-toggle" id="toggle-pass" aria-label="Mostrar contraseña">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="strength" id="strength" hidden><span class="bar"></span><small></small></div>
+            <a class="login-forgot" href="recover.html">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          <div class="login-error" id="login-error" hidden></div>
+
+          <button type="submit" class="login-cta" id="login-submit">Iniciar sesión</button>
+        </form>
+
+        <div class="login-or"><span>o continúa con</span></div>
+        <div id="google-btn" class="google-btn"></div>
+        <div class="google-fallback" id="google-fallback" hidden>
+          Configura tu <b>Client ID de Google</b> para habilitar el ingreso con Google. Mientras tanto, entra con tu correo.
+        </div>
+
+        <a class="login-back" href="index.html">← Volver a la tienda</a>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="js/login.js"></script>
+</body>
+</html>

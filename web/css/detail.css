@@ -1,0 +1,37 @@
+/* CavaLocal — Modal de detalle del vino (referencias + reseñas) */
+.dt-bg { position: fixed; inset: 0; background: rgba(20,8,12,0.55); display: flex; align-items: flex-start; justify-content: center; padding: 40px 16px; z-index: 1500; overflow-y: auto; }
+.dt-modal { background: var(--card); border-radius: var(--radius-xl); border-top: 3px solid var(--gold); width: 100%; max-width: 640px; box-shadow: var(--shadow-lg); position: relative; animation: coRise 0.3s cubic-bezier(0.2,0.7,0.2,1); }
+.dt-close { position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border-radius: 50%; background: var(--surface); font-size: 16px; z-index: 2; }
+.dt-loading { padding: 60px; text-align: center; color: var(--muted); }
+.dt-hero { display: flex; gap: 18px; padding: 26px 26px 16px; border-bottom: 1px solid var(--border); }
+.dt-img { width: 110px; height: 150px; background: var(--thumb); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+.dt-img svg { height: 80%; } .dt-img img { width: 100%; height: 100%; object-fit: contain; padding: 8px; }
+.dt-winery { font-size: 11px; letter-spacing: 0.6px; font-weight: 800; color: var(--gold); text-transform: uppercase; }
+.dt-hero-info h3 { font-family: var(--font-display); color: var(--ink); font-size: 22px; margin: 4px 0 8px; }
+.dt-price { color: var(--muted); font-size: 14px; } .dt-price b { color: var(--wine); font-size: 20px; }
+.dt-reserve { margin-top: 12px; background: var(--wine); color: #fff; border-radius: var(--radius-sm); padding: 10px 22px; font-weight: 700; }
+.dt-body { padding: 20px 26px 28px; }
+.dt-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px; }
+.dt-fact { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dashed var(--border); padding: 5px 0; font-size: 13px; }
+.dt-fact .k { color: var(--muted); } .dt-fact .v { font-weight: 700; color: var(--ink); text-align: right; }
+.dt-note { font-style: italic; color: var(--ink); background: var(--surface); border-left: 3px solid var(--gold); padding: 12px 14px; border-radius: 8px; margin: 16px 0; }
+.dt-offers { margin: 18px 0; } .dt-offers h4, .dt-rev-head h4 { font-size: 14px; color: var(--wine); margin-bottom: 8px; }
+.dt-offer { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.dt-offer .best { color: var(--wine); font-size: 10px; } .dt-offer .op { font-weight: 800; }
+.dt-reviews { margin-top: 20px; }
+.dt-rev-head { display: flex; align-items: center; justify-content: space-between; }
+.dt-rev { border-top: 1px solid var(--border); padding: 10px 0; }
+.dt-rev-top { display: flex; justify-content: space-between; font-size: 14px; }
+.dt-rev p { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.dt-empty { color: var(--muted); font-size: 13px; padding: 8px 0; }
+.star { color: var(--border); } .star.on { color: var(--gold); }
+.dt-form { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+.dt-stars-input { display: flex; gap: 4px; }
+.star-btn { font-size: 26px; color: var(--border); background: none; line-height: 1; } .star-btn.on { color: var(--gold); }
+.dt-form textarea { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; font: inherit; resize: vertical; min-height: 70px; }
+.dt-submit { align-self: flex-start; background: var(--wine); color: #fff; padding: 10px 22px; border-radius: var(--radius-sm); font-weight: 700; }
+.dt-err { color: #C0392B; font-size: 13px; }
+.dt-form-login { margin-top: 16px; color: var(--muted); font-size: 14px; } .dt-form-login a { color: var(--wine); font-weight: 700; }
+/* ---- Cómo llegar / dirección en ofertas ---- */
+.dt-addr { display: block; font-size: 12px; color: var(--muted, #8B7F79); }
+.dt-dir { font-size: 12px; font-weight: 700; color: #641E2E; }

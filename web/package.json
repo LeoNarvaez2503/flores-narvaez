@@ -1,0 +1,10 @@
+{
+  "name": "cavalocal-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Frontend oficial de CavaLocal (HTML/CSS/JS puro, ES modules). Sin build step.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,471 @@
+/* ============================================
+   CAVALOCAL — Landing Page Styles v3
+   FIXED: Much larger text, stronger contrast,
+   darker overlays, bolder weights
+   ============================================ */
+
+/* --- Geomanist (local if available) --- */
+@font-face { font-family: 'Geomanist'; src: url('./assets/fonts/Geomanist-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Geomanist'; src: url('./assets/fonts/Geomanist-Medium.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Geomanist'; src: url('./assets/fonts/Geomanist-Bold.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+
+:root {
+  /* Wine Palette */
+  --wine-deep:     #1A060B;
+  --wine-dark:     #3D0C1C;
+  --wine-red:      #722F37;
+  --wine-burgundy: #8B1A3A;
+  --wine-rose:     #C2526A;
+
+  /* Gold */
+  --gold-dark:     #8B7536;
+  --gold:          #C9A96E;
+  --gold-light:    #E8D5A3;
+  --champagne:     #F7E7CE;
+
+  /* Neutrals */
+  --white:         #FFFFFF;
+  --ivory:         #FDFBF7;
+  --cream:         #F5F0E8;
+  --charcoal:      #0D0D0D;
+  --smoke:         #1A1A1A;
+  --silver:        #999999;
+
+  /* Font Stacks */
+  --font-display:  'Bodoni Moda', 'Playfair Display', 'Times New Roman', serif;
+  --font-heading:  'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-elegant:  'Instrument Serif', 'Playfair Display', Georgia, serif;
+  --font-classic:  'Cinzel', 'Times New Roman', serif;
+  --font-sans:     'DM Sans', 'Geomanist', 'Outfit', system-ui, sans-serif;
+  --font-body:     'Cormorant', 'Cormorant Garamond', Georgia, serif;
+
+  --ease-luxe:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Reset --- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { overflow-x: hidden; }
+body {
+  font-family: var(--font-sans);
+  background: var(--charcoal);
+  color: var(--white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* --- Preloader --- */
+#preloader {
+  position: fixed; inset: 0; z-index: 10000;
+  background: var(--charcoal);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transition: opacity 1s var(--ease-luxe), visibility 1s;
+}
+#preloader.loaded { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.preloader-logo {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1rem;
+  animation: breathe 2.5s ease-in-out infinite;
+}
+.preloader-tagline {
+  font-family: var(--font-sans); font-weight: 400;
+  font-size: 0.85rem; letter-spacing: 0.4em;
+  text-transform: uppercase; color: var(--silver);
+  margin-bottom: 3rem;
+}
+.preloader-bar {
+  width: 220px; height: 2px;
+  background: rgba(201,169,110,0.15);
+  overflow: hidden; position: relative;
+}
+.preloader-bar-fill {
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+  transform-origin: left; transform: scaleX(0);
+  transition: transform 0.3s var(--ease-smooth);
+}
+.preloader-percent {
+  font-family: var(--font-sans); font-weight: 400;
+  font-size: 0.85rem; letter-spacing: 0.3em;
+  color: var(--gold); opacity: 0.6; margin-top: 1rem;
+}
+@keyframes breathe { 0%,100%{opacity:.6} 50%{opacity:1} }
+
+/* --- Canvas & Overlay --- */
+#video-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 1;
+}
+
+#video-overlay {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: radial-gradient(circle, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 100%), rgba(0,0,0,0.35);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* --- Scroll Container --- */
+#scroll-container { position: relative; z-index: 3; }
+
+/* --- Story Section --- */
+.story-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+
+.story-content {
+  max-width: 1100px; width: 92%;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  opacity: 0; transform: translateY(60px);
+  position: relative; z-index: 5;
+  background: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  border-radius: 0;
+}
+
+/* Hero has no dark panel — just text shadow */
+#hero-content {
+  background: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+}
+
+/* --- Spacers --- */
+.story-spacer { height: 60vh; position: relative; }
+.story-spacer.short { height: 40vh; }
+.story-spacer.long { height: 80vh; }
+
+/* --- Navigation --- */
+.nav-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 1.5rem 2.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  mix-blend-mode: difference;
+}
+.nav-logo {
+  font-family: var(--font-classic); font-weight: 700;
+  font-size: 1rem; letter-spacing: 0.4em;
+  text-transform: uppercase; color: white; text-decoration: none;
+}
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  font-family: var(--font-sans); font-weight: 500;
+  font-size: 0.75rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: white;
+  text-decoration: none; padding-bottom: 4px;
+  position: relative;
+}
+.nav-links a::after {
+  content:''; position: absolute; bottom: 0; left: 0;
+  width: 100%; height: 1px; background: var(--gold);
+  transform: scaleX(0); transform-origin: right;
+  transition: transform 0.5s var(--ease-luxe);
+}
+.nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+
+/* ====================================================
+   TYPOGRAPHY — LARGE, BOLD, READABLE
+   ==================================================== */
+
+/* HERO — Huge Bodoni Moda */
+.hero-title {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(5rem, 13vw, 12rem);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--white); line-height: 0.85;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 4px 30px rgba(0,0,0,0.9), 0 10px 60px rgba(0,0,0,0.6);
+}
+.hero-accent {
+  display: block;
+  font-family: var(--font-elegant); font-weight: 400;
+  font-style: italic;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  letter-spacing: 0.05em; text-transform: none;
+  color: var(--gold-light); margin-top: 0.3rem;
+}
+.hero-subtitle {
+  font-family: var(--font-sans); font-weight: 500;
+  font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+  letter-spacing: 0.5em; text-transform: uppercase;
+  color: var(--gold); margin-top: 2rem;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.9);
+}
+
+/* SECTION LABEL — Cinzel, bigger */
+.section-label {
+  font-family: var(--font-classic); font-weight: 700;
+  font-size: clamp(0.75rem, 1.1vw, 0.95rem);
+  letter-spacing: 0.5em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1.5rem;
+  display: flex; align-items: center; justify-content: center; gap: 1.5rem;
+  text-shadow: 0 2px 15px rgba(0,0,0,0.9);
+}
+.section-label::before, .section-label::after {
+  content:''; width: 50px; height: 1px;
+  background: var(--gold); opacity: 0.5;
+}
+
+/* HEADING — Cormorant Garamond, MUCH LARGER */
+.section-heading {
+  font-family: var(--font-heading); font-weight: 600;
+  font-size: clamp(3.5rem, 7vw, 6.5rem);
+  line-height: 1.05; color: var(--white);
+  margin-bottom: 1.5rem;
+  text-shadow: 0 4px 25px rgba(0,0,0,0.95), 0 8px 50px rgba(0,0,0,0.6);
+}
+.section-heading em {
+  font-style: italic; color: var(--gold-light);
+}
+
+/* SUBHEADING — Instrument Serif, bigger */
+.section-subheading {
+  font-family: var(--font-elegant); font-weight: 400;
+  font-style: italic;
+  font-size: clamp(1.3rem, 2.2vw, 1.9rem);
+  line-height: 1.4; color: var(--gold);
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.9);
+}
+
+/* BODY — Cormorant, MUCH BIGGER & BOLDER */
+.section-body {
+  font-family: var(--font-body); font-weight: 500;
+  font-size: clamp(1.25rem, 1.8vw, 1.55rem);
+  line-height: 1.85; color: var(--white);
+  max-width: 680px; margin: 0 auto;
+  text-shadow: 0 2px 15px rgba(0,0,0,0.95), 0 4px 30px rgba(0,0,0,0.6);
+}
+
+/* HIGHLIGHT BADGE */
+.section-highlight {
+  font-family: var(--font-sans); font-weight: 600;
+  font-size: clamp(0.8rem, 1.1vw, 1rem);
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--white); margin-top: 2rem;
+  padding: 14px 32px;
+  border: 1px solid rgba(201,169,110,0.4);
+  display: inline-block;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+}
+
+/* QUOTE — bigger, bolder */
+.section-quote {
+  font-family: var(--font-elegant); font-weight: 400;
+  font-style: italic;
+  font-size: clamp(1.6rem, 3vw, 2.5rem);
+  line-height: 1.45; color: var(--gold-light);
+  margin-top: 2rem; position: relative;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.95), 0 6px 40px rgba(0,0,0,0.5);
+}
+.section-quote::before {
+  content:'"'; font-family: var(--font-display);
+  font-size: 5rem; color: var(--gold); opacity: 0.3;
+  position: absolute; top: -2rem; left: -1.5rem; line-height: 1;
+}
+
+/* STATS — Large Bodoni */
+.section-stat {
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(5rem, 10vw, 8rem);
+  line-height: 1; color: var(--gold);
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 25px rgba(201,169,110,0.5), 0 0 80px rgba(201,169,110,0.2);
+}
+.section-stat-label {
+  font-family: var(--font-sans); font-weight: 500;
+  font-size: clamp(0.75rem, 1vw, 0.95rem);
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--gold); opacity: 0.85; margin-top: 0.5rem;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+}
+.stats-row {
+  display: flex; justify-content: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  margin-top: 2.5rem; flex-wrap: wrap;
+}
+.stats-row > div { text-align: center; }
+
+/* FEATURE LIST — Professional icons, no emojis */
+.feature-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem; margin-top: 2.5rem;
+  text-align: center; list-style: none;
+  max-width: 860px; margin-left: auto; margin-right: auto;
+}
+.feature-item {
+  padding: 2rem 1.5rem;
+  border: 1px solid rgba(201,169,110,0.2);
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.feature-icon {
+  width: 36px; height: 36px;
+  margin: 0 auto 1rem;
+  color: var(--gold);
+  display: block;
+}
+.feature-icon svg {
+  width: 100%; height: 100%;
+  stroke: var(--gold); stroke-width: 1.5;
+  fill: none;
+}
+.feature-title {
+  font-family: var(--font-classic); font-weight: 700;
+  font-size: 0.85rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 0.6rem;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.9);
+}
+.feature-desc {
+  font-family: var(--font-body); font-weight: 500;
+  font-size: 1.1rem; line-height: 1.6;
+  color: rgba(255,255,255,0.85);
+  text-shadow: 0 1px 8px rgba(0,0,0,0.9);
+}
+
+/* DIVIDER */
+.story-divider {
+  width: 1px; height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  margin: 2rem auto;
+}
+
+/* CTA BUTTON — Bigger */
+.cta-button {
+  display: inline-block; pointer-events: all;
+  margin-top: 2rem; padding: 22px 60px;
+  font-family: var(--font-classic); font-weight: 700;
+  font-size: 0.85rem; letter-spacing: 0.35em;
+  text-transform: uppercase; color: var(--white);
+  background: transparent;
+  border: 2px solid var(--gold);
+  cursor: pointer; position: relative; overflow: hidden;
+  text-decoration: none;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+  transition: color 0.5s var(--ease-luxe), border-color 0.5s var(--ease-luxe),
+              box-shadow 0.5s var(--ease-luxe);
+}
+.cta-button::before {
+  content:''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--wine-burgundy), var(--wine-dark));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.6s var(--ease-luxe); z-index: -1;
+}
+.cta-button:hover {
+  border-color: var(--wine-burgundy); color: var(--gold-light);
+  box-shadow: 0 0 50px rgba(139,26,58,0.4);
+}
+.cta-button:hover::before { transform: scaleX(1); }
+
+.cta-secondary {
+  border-width: 1px; border-color: rgba(201,169,110,0.4);
+  padding: 16px 45px; font-size: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* BADGE */
+.badge {
+  font-family: var(--font-sans); font-weight: 600;
+  font-size: 0.7rem; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--charcoal);
+  background: var(--gold); padding: 8px 20px;
+  display: inline-block; margin-bottom: 1.5rem;
+}
+
+/* SCROLL INDICATOR */
+.scroll-indicator {
+  position: fixed; bottom: 2rem; left: 50%;
+  transform: translateX(-50%); z-index: 50;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 8px;
+  opacity: 1; transition: opacity 0.6s var(--ease-smooth);
+}
+.scroll-indicator.hidden { opacity: 0; pointer-events: none; }
+.scroll-indicator-text {
+  font-family: var(--font-sans); font-weight: 500;
+  font-size: 0.7rem; letter-spacing: 0.4em;
+  text-transform: uppercase; color: var(--gold);
+}
+.scroll-indicator-line {
+  width: 1px; height: 40px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%,100% { opacity:1; transform:scaleY(1); }
+  50% { opacity:0.3; transform:scaleY(0.5); }
+}
+
+/* PROGRESS BAR */
+.progress-bar {
+  position: fixed; top: 0; left: 0;
+  height: 2px; z-index: 200;
+  background: linear-gradient(90deg, var(--wine-burgundy), var(--gold), var(--gold-light));
+  transform-origin: left; transform: scaleX(0);
+}
+
+/* SOCIAL PROOF */
+.social-proof {
+  margin-top: 2.5rem;
+  font-family: var(--font-sans); font-weight: 600;
+  font-size: 0.85rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--silver);
+  text-shadow: 0 1px 8px rgba(0,0,0,0.9);
+}
+
+/* FIXED BACKGROUND VIDEOS */
+#bg-video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1; /* Al mismo nivel que el canvas */
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bg-story-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  display: block;
+}
+
+#video-canvas {
+  transition: opacity 0.8s var(--ease-smooth);
+}
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-bar { padding: 1rem; }
+  .story-content { padding: 2rem 1rem; }
+  .feature-list { grid-template-columns: 1fr; max-width: 380px; }
+  .stats-row { gap: 2rem; }
+  .section-quote::before { display: none; }
+  .cta-button { padding: 18px 40px; }
+}
+@media (max-width: 480px) {
+  .hero-title { font-size: 3.5rem; }
+  .section-heading { font-size: 2.5rem; }
+  .section-label::before, .section-label::after { width: 20px; }
+}

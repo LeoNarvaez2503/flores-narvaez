@@ -1,0 +1,264 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CONSUMER
+  ESTABLISHMENT
+  SOMMELIER
+  ADMIN
+}
+
+enum MembershipTier {
+  GRATUITO
+  PREMIUM
+}
+
+enum EstablishmentType {
+  LICORERIA
+  BODEGON
+  SUPERMERCADO
+  RESTAURANTE
+  BODEGA
+  IMPORTADOR
+}
+
+enum EstablishmentTier {
+  BASICA
+  DESTACADA
+}
+
+enum AvailabilityStatus {
+  DISPONIBLE
+  AGOTADO
+}
+
+enum ReviewTarget {
+  WINE
+  ESTABLISHMENT
+}
+
+enum OrderType {
+  RESERVA
+  PICKUP
+  DELIVERY
+}
+
+enum OrderStatus {
+  PENDIENTE
+  CONFIRMADA
+  COMPLETADA
+  CANCELADA
+}
+
+model User {
+  id             String          @id @default(uuid())
+  email          String          @unique
+  phone          String?         @unique
+  passwordHash   String
+  googleId       String?         @unique
+  resetToken          String?   @unique
+  resetTokenExpiresAt DateTime?
+  name           String
+  role           UserRole        @default(CONSUMER)
+  membershipTier MembershipTier  @default(GRATUITO)
+  preference     UserPreference?
+  reviews        Review[]
+  orders         Order[]
+  reservations   Reservation[]
+  establishments Establishment[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model UserPreference {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  grapes    String[]
+  regions   String[]
+  budgetMin Decimal? @db.Decimal(10, 2)
+  budgetMax Decimal? @db.Decimal(10, 2)
+}
+
+model Establishment {
+  id             String            @id @default(uuid())
+  name           String
+  type           EstablishmentType
+  lat            Float
+  lng            Float
+  address        String
+  membershipTier EstablishmentTier @default(BASICA)
+  contactPhone   String?
+  contactEmail   String?
+  authorized     Boolean           @default(false)
+  ownerUserId    String?
+  owner          User?             @relation(fields: [ownerUserId], references: [id])
+  availabilities Availability[]
+  orders         Order[]
+  reservations   Reservation[]
+  createdAt      DateTime          @default(now())
+
+  @@index([lat, lng])
+}
+
+model Wine {
+  id                   String         @id @default(uuid())
+  name                 String
+  type                 String
+  wineryName           String
+  origin               String
+  country              String?
+  grape                String
+  vintage              Int?
+  tastingNote          String?
+  pairing              String?
+  denominationOfOrigin String?
+  aging                String?
+  descriptors          Json?
+  referencePrice       Decimal        @db.Decimal(10, 2)
+  criticScore          Int?
+  imageUrl             String?
+  verified             Boolean        @default(false)
+  availabilities       Availability[]
+  reservations         Reservation[]
+  createdAt            DateTime       @default(now())
+
+  @@index([grape])
+  @@index([origin])
+  @@index([type])
+  @@index([country])
+  @@index([wineryName])
+  @@index([criticScore])
+}
+
+model Availability {
+  id              String             @id @default(uuid())
+  wineId          String
+  wine            Wine               @relation(fields: [wineId], references: [id], onDelete: Cascade)
+  establishmentId String
+  establishment   Establishment      @relation(fields: [establishmentId], references: [id], onDelete: Cascade)
+  price           Decimal            @db.Decimal(10, 2)
+  status          AvailabilityStatus @default(DISPONIBLE)
+  updatedAt       DateTime           @updatedAt
+
+  @@unique([wineId, establishmentId])
+  @@index([wineId])
+  @@index([establishmentId])
+}
+
+model Review {
+  id              String       @id @default(uuid())
+  userId          String
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  targetType      ReviewTarget
+  wineId          String?
+  establishmentId String?
+  rating          Int
+  comment         String?
+  createdAt       DateTime     @default(now())
+
+  @@index([targetType, wineId])
+  @@index([targetType, establishmentId])
+  @@unique([userId, wineId])
+}
+
+model Order {
+  id              String        @id @default(uuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  establishmentId String
+  establishment   Establishment @relation(fields: [establishmentId], references: [id])
+  type            OrderType
+  amount          Decimal       @db.Decimal(10, 2)
+  commission      Decimal       @db.Decimal(10, 2)
+  deliveryFee     Decimal       @default(0) @db.Decimal(10, 2)
+  status          OrderStatus   @default(PENDIENTE)
+  createdAt       DateTime      @default(now())
+}
+
+model Subscription {
+  id              String    @id @default(uuid())
+  userId          String?
+  establishmentId String?
+  plan            String
+  status          String    @default("ACTIVA")
+  startedAt       DateTime  @default(now())
+  renewsAt        DateTime?
+}
+
+model Content {
+  id        String   @id @default(uuid())
+  wineId    String?
+  type      String
+  body      String
+  authorId  String?
+  createdAt DateTime @default(now())
+}
+
+model B2BReport {
+  id        String   @id @default(uuid())
+  scope     String
+  period    String
+  dataJson  Json
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String    @id @default(uuid())
+  userId    String
+  type      String
+  payload   Json
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model Referral {
+  id             String   @id @default(uuid())
+  referrerUserId String
+  referredEmail  String
+  status         String   @default("PENDIENTE")
+  createdAt      DateTime @default(now())
+}
+
+model Reservation {
+  id              String        @id @default(uuid())
+  invoiceNumber   String        @unique
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  wineId          String
+  wine            Wine          @relation(fields: [wineId], references: [id])
+  establishmentId String
+  establishment   Establishment @relation(fields: [establishmentId], references: [id])
+  quantity        Int
+  unitPrice       Decimal       @db.Decimal(10, 2)
+  subtotal        Decimal       @db.Decimal(10, 2)
+  discountPct     Int           @default(0)
+  discountAmount  Decimal       @db.Decimal(10, 2)
+  total           Decimal       @db.Decimal(10, 2)
+  deposit         Decimal       @db.Decimal(10, 2)
+  balance         Decimal       @db.Decimal(10, 2)
+  orderType       String   @default("pickup")
+  deliveryFee     Decimal  @default(0) @db.Decimal(10, 2)
+  deliveryAddress String?
+  deliveryLat     Float?
+  deliveryLng     Float?
+  wineName        String
+  wineryName      String
+  storeName       String
+  storeAddress    String
+  customerName    String
+  customerEmail   String
+  customerPhone   String?
+  pickupDate      DateTime?
+  status          String        @default("pending_payment")
+  emailSent       Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+
+  @@index([userId])
+}

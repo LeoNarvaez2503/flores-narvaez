@@ -1,0 +1,180 @@
+/* ============================================================
+   CavaLocal — Login inmersivo de página partida.
+   Firma: regla de oro + foto cinematográfica (Ken Burns).
+   Marca pineada (burdeos/oro/crema, Playfair+Inter); el oro se
+   usa con restricción (eyebrow, hairline, foco).
+   ============================================================ */
+
+.login-body { min-height: 100vh; background: var(--cream); overflow-x: hidden; }
+.login-split { display: grid; grid-template-columns: 1.15fr 0.85fr; min-height: 100vh; }
+
+/* ---------- Lienzo inmersivo (izquierda) ---------- */
+.login-aside {
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 56px;
+  border-right: 1px solid rgba(194, 145, 43, 0.55); /* hairline de oro: la "costura" */
+}
+.login-aside-img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  transform: scale(1.04); /* leve zoom; el movimiento lo aporta el <video> en bucle */
+}
+/* textura sutil para que la foto no se sienta plana */
+.login-aside-grain {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0.5; mix-blend-mode: overlay;
+  background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+.login-aside-overlay {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(20,8,12,0.10) 0%, rgba(20,8,12,0.0) 30%, rgba(20,8,12,0.55) 72%, rgba(20,8,12,0.92) 100%),
+    linear-gradient(90deg, rgba(72,18,31,0.45) 0%, rgba(72,18,31,0.0) 55%);
+}
+
+.login-brand {
+  position: absolute; top: 40px; left: 56px; z-index: 2;
+  display: flex; align-items: center; gap: 12px;
+  color: #fff; font-family: var(--font-display); font-size: 25px; font-weight: 800; letter-spacing: 0.3px;
+  animation: rise 0.7s cubic-bezier(0.2,0.7,0.2,1) both;
+}
+.login-brand .logo { width: 30px; height: 40px; }
+
+.login-aside-copy { position: relative; z-index: 2; max-width: 480px; }
+.login-eyebrow {
+  display: inline-block; color: var(--gold); font-size: 11px; font-weight: 800;
+  letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px;
+  animation: rise 0.7s cubic-bezier(0.2,0.7,0.2,1) both; animation-delay: 0.08s;
+}
+.login-aside-copy h1 {
+  font-family: var(--font-display); color: #fff; font-weight: 800;
+  font-size: clamp(38px, 4.4vw, 60px); line-height: 1.02; letter-spacing: -0.5px;
+  text-shadow: 0 2px 30px rgba(0,0,0,0.35);
+  animation: rise 0.8s cubic-bezier(0.2,0.7,0.2,1) both; animation-delay: 0.16s;
+}
+.login-aside-copy p {
+  color: rgba(255,255,255,0.82); font-size: 16px; line-height: 1.6; margin-top: 18px; max-width: 40ch;
+  animation: rise 0.8s cubic-bezier(0.2,0.7,0.2,1) both; animation-delay: 0.26s;
+}
+
+/* ---------- Panel de acceso (derecha) ---------- */
+.login-main { display: flex; align-items: center; justify-content: center; padding: 48px 28px; }
+.login-card { width: 100%; max-width: 408px; animation: rise 0.7s cubic-bezier(0.2,0.7,0.2,1) both; animation-delay: 0.1s; }
+
+.login-mark-sm { display: none; justify-content: center; margin-bottom: 18px; }
+
+/* Tabs segmentadas con thumb deslizante (sin JS: usa :has) */
+.login-tabs {
+  position: relative; display: flex; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 50px; padding: 5px; margin-bottom: 30px;
+}
+.login-tab {
+  position: relative; z-index: 1; flex: 1; padding: 11px 10px; border-radius: 50px;
+  font-weight: 700; font-size: 14px; color: var(--muted); transition: color 0.3s ease;
+}
+.login-tab.active { color: #fff; }
+.login-tabs-thumb {
+  position: absolute; z-index: 0; top: 5px; left: 5px; bottom: 5px; width: calc(50% - 5px);
+  background: var(--wine); border-radius: 50px; box-shadow: 0 6px 16px rgba(100,30,46,0.28);
+  transition: transform 0.35s cubic-bezier(0.5,0,0.1,1);
+}
+.login-tabs:has(.login-tab[data-mode="register"].active) .login-tabs-thumb { transform: translateX(100%); }
+
+.login-card h2 {
+  font-family: var(--font-display); font-size: 32px; font-weight: 800; color: var(--wine);
+  letter-spacing: -0.3px; line-height: 1.1;
+}
+/* florituera de oro bajo el título: gesto de marca discreto */
+.login-card h2::after {
+  content: ""; display: block; width: 38px; height: 3px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--gold), transparent); margin-top: 12px;
+}
+.login-sub { color: var(--muted); font-size: 14.5px; margin: 10px 0 24px; }
+
+.field { margin-bottom: 17px; }
+.field label { display: block; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 7px; }
+.field input {
+  width: 100%; height: 52px; border: 1px solid var(--border); background: var(--surface);
+  border-radius: var(--radius-md); padding: 0 15px; font-size: 15px; color: var(--ink);
+  outline: none; transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+.field input::placeholder { color: var(--faint); }
+.field input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-soft); background: #fff; }
+.field input.invalid { border-color: var(--danger); }
+.field input.valid { border-color: var(--green); }
+.hint { display: block; font-size: 12px; margin-top: 6px; min-height: 15px; color: var(--danger); }
+
+.pass-wrap { position: relative; }
+.pass-wrap input { padding-right: 50px; }
+.pass-toggle {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  width: 36px; height: 36px; border-radius: 9px; color: var(--muted);
+  display: flex; align-items: center; justify-content: center; transition: color 0.2s, background 0.2s;
+}
+.pass-toggle:hover { color: var(--wine); background: var(--gold-soft); }
+
+.strength { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.strength .bar { flex: 1; height: 6px; border-radius: 4px; background: var(--border); position: relative; overflow: hidden; }
+.strength .bar::after { content: ""; position: absolute; inset: 0 100% 0 0; border-radius: 4px; transition: right 0.35s ease, background 0.35s ease; }
+.strength[data-score="1"] .bar::after { right: 66%; background: var(--danger); }
+.strength[data-score="2"] .bar::after { right: 33%; background: var(--amber); }
+.strength[data-score="3"] .bar::after { right: 0; background: var(--green); }
+.strength small { font-size: 12px; color: var(--muted); min-width: 58px; text-align: right; }
+
+.login-error {
+  background: #fbeaea; color: var(--danger); border: 1px solid #f1d4d4;
+  border-radius: var(--radius-md); padding: 12px 14px; font-size: 13px; margin-bottom: 16px;
+  animation: shake 0.4s ease;
+}
+
+.login-cta {
+  width: 100%; height: 54px; background: var(--wine); color: #fff; border-radius: var(--radius-md);
+  font-weight: 800; font-size: 16px; letter-spacing: 0.2px; margin-top: 6px;
+  transition: transform 0.15s ease, background 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 10px 24px rgba(100,30,46,0.22);
+}
+.login-cta:hover { background: var(--wine-soft); box-shadow: 0 14px 30px rgba(100,30,46,0.3); }
+.login-cta:active { transform: translateY(1px); }
+.login-cta[disabled] { opacity: 0.65; cursor: default; box-shadow: none; }
+
+.login-or { display: flex; align-items: center; gap: 14px; color: var(--muted); font-size: 12.5px; margin: 22px 0; }
+.login-or::before, .login-or::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+.google-btn { display: flex; justify-content: center; min-height: 44px; }
+.google-fallback {
+  font-size: 12.5px; color: var(--muted); text-align: center; line-height: 1.5;
+  background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius-md); padding: 12px;
+}
+.google-fallback b { color: var(--wine); }
+
+.login-back { display: inline-block; margin-top: 26px; color: var(--muted); font-size: 14px; transition: color 0.2s; }
+.login-back:hover { color: var(--wine); }
+
+/* ---------- Animaciones (con respeto a reduced-motion) ---------- */
+@keyframes rise { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+@keyframes kenburns { from { transform: scale(1.04) translate(0, 0); } to { transform: scale(1.14) translate(-2%, -2%); } }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .login-aside-img { animation: none; transform: scale(1.04); }
+  .login-brand, .login-eyebrow, .login-aside-copy h1, .login-aside-copy p, .login-card { animation: none; }
+  .login-tabs-thumb { transition: none; }
+  .login-error { animation: none; }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .login-split { grid-template-columns: 1fr; }
+  .login-aside { min-height: 40vh; padding: 32px; border-right: none; border-bottom: 1px solid rgba(194,145,43,0.55); }
+  .login-brand { top: 24px; left: 32px; font-size: 22px; }
+  .login-main { padding: 36px 22px; }
+  .login-mark-sm { display: flex; }
+}
+@media (max-width: 480px) {
+  .login-aside { min-height: 32vh; }
+  .login-card h2 { font-size: 28px; }
+}
+
+/* ---- recuperar contraseña ---- */
+.login-forgot { display: inline-block; margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--wine, #641E2E); text-decoration: none; }
+.login-forgot:hover { text-decoration: underline; }
