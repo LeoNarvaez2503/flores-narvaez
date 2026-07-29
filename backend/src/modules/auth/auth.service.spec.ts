@@ -6,6 +6,8 @@ import { GoogleVerifierService } from './google-verifier.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { EmailService } from '../notifications/email.service';
 
+import { AuditPublisherService } from '../../audit-publisher/audit-publisher.service';
+
 describe('AuthService.googleLogin', () => {
   let service: AuthService;
   const prisma = {
@@ -17,6 +19,7 @@ describe('AuthService.googleLogin', () => {
   };
   const verifier = { verify: jest.fn() };
   const jwt = { sign: jest.fn().mockReturnValue('signed.jwt') };
+  const auditPublisher = { publishAuditEvent: jest.fn() };
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -28,6 +31,7 @@ describe('AuthService.googleLogin', () => {
         { provide: JwtService, useValue: jwt },
         { provide: EmailService, useValue: { sendPasswordReset: jest.fn() } },
         { provide: ConfigService, useValue: { get: jest.fn() } },
+        { provide: AuditPublisherService, useValue: auditPublisher },
       ],
     }).compile();
     service = moduleRef.get(AuthService);

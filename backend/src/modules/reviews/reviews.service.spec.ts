@@ -2,20 +2,28 @@ import { Test } from '@nestjs/testing';
 import { ReviewsService } from './reviews.service';
 import { PrismaService } from '../../prisma/prisma.service';
 
+import { AuditPublisherService } from '../../audit-publisher/audit-publisher.service';
+
 describe('ReviewsService', () => {
   let service: ReviewsService;
   const prisma: any = {
+    user: { findUnique: jest.fn().mockResolvedValue({ email: 'user@example.com' }) },
     review: {
       findFirst: jest.fn(), create: jest.fn(), update: jest.fn(),
       findMany: jest.fn(), count: jest.fn(), aggregate: jest.fn(),
     },
     $transaction: jest.fn(),
   };
+  const auditPublisher = { publishAuditEvent: jest.fn() };
 
   beforeEach(async () => {
     jest.clearAllMocks();
     const moduleRef = await Test.createTestingModule({
-      providers: [ReviewsService, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        ReviewsService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: AuditPublisherService, useValue: auditPublisher },
+      ],
     }).compile();
     service = moduleRef.get(ReviewsService);
   });

@@ -1,7 +1,7 @@
 import { ReservationsService } from './reservations.service';
 
 describe('ReservationsService.computeAmounts', () => {
-  const svc = new ReservationsService({} as any, {} as any, {} as any);
+  const svc = new ReservationsService({} as any, {} as any, {} as any, { publishAuditEvent: jest.fn() } as any);
 
   it('aplica 5% en primera reserva y seña 20/80', () => {
     const a = svc.computeAmounts({ unitPrice: 10, quantity: 2, isFirstReservation: true });
@@ -33,7 +33,8 @@ describe('ReservationsService.payReservation', () => {
   const prisma = { reservation: { findUnique: jest.fn(), update: jest.fn() } } as any;
   const payments = { charge: jest.fn().mockReturnValue({ status: 'approved', paymentId: 'pay_x' }) } as any;
   const email = { sendInvoice: jest.fn().mockResolvedValue(true) } as any;
-  const svc = new ReservationsService(prisma, payments, email);
+  const audit = { publishAuditEvent: jest.fn() } as any;
+  const svc = new ReservationsService(prisma, payments, email, audit);
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -69,7 +70,7 @@ describe('ReservationsService.payReservation', () => {
 });
 
 describe('ReservationsService.deliveryFeeFor', () => {
-  const svc = new ReservationsService({} as any, {} as any, {} as any);
+  const svc = new ReservationsService({} as any, {} as any, {} as any, { publishAuditEvent: jest.fn() } as any);
   const store = { lat: 10.5, lng: -66.85 };
 
   it('pickup no cobra envío', () => {
@@ -83,7 +84,7 @@ describe('ReservationsService.deliveryFeeFor', () => {
 });
 
 describe('ReservationsService.computeAmounts con envío', () => {
-  const svc = new ReservationsService({} as any, {} as any, {} as any);
+  const svc = new ReservationsService({} as any, {} as any, {} as any, { publishAuditEvent: jest.fn() } as any);
   it('suma el envío y calcula seña 20% sobre el total con envío', () => {
     const a = svc.computeAmounts({ unitPrice: 10, quantity: 2, isFirstReservation: false, deliveryFee: 2.55 });
     expect(a.total).toBe(22.55);
@@ -97,7 +98,7 @@ describe('ReservationsService.createReservation — stock', () => {
     availability: { findUnique: jest.fn() },
     reservation: { count: jest.fn(), create: jest.fn() },
   } as any;
-  const svc = new ReservationsService(prisma, {} as any, {} as any);
+  const svc = new ReservationsService(prisma, {} as any, {} as any, { publishAuditEvent: jest.fn() } as any);
 
   beforeEach(() => jest.clearAllMocks());
 
@@ -138,7 +139,7 @@ describe('ReservationsService.previewReservation', () => {
     availability: { findUnique: jest.fn() },
     reservation: { count: jest.fn(), create: jest.fn() },
   } as any;
-  const svc = new ReservationsService(prisma, {} as any, {} as any);
+  const svc = new ReservationsService(prisma, {} as any, {} as any, { publishAuditEvent: jest.fn() } as any);
 
   beforeEach(() => jest.clearAllMocks());
 
@@ -178,7 +179,7 @@ describe('ReservationsService.previewReservation', () => {
 
 describe('ReservationsService.cancelReservation', () => {
   const prisma = { reservation: { findUnique: jest.fn(), update: jest.fn() } } as any;
-  const svc = new ReservationsService(prisma, {} as any, {} as any);
+  const svc = new ReservationsService(prisma, {} as any, {} as any, { publishAuditEvent: jest.fn() } as any);
 
   beforeEach(() => jest.clearAllMocks());
 
@@ -203,7 +204,7 @@ describe('ReservationsService.cancelReservation', () => {
 
 describe('ReservationsService.expireStale', () => {
   const prisma = { reservation: { updateMany: jest.fn() } } as any;
-  const svc = new ReservationsService(prisma, {} as any, {} as any);
+  const svc = new ReservationsService(prisma, {} as any, {} as any, { publishAuditEvent: jest.fn() } as any);
 
   it('marca como expired las pendientes con más de 24h', async () => {
     prisma.reservation.updateMany.mockResolvedValue({ count: 3 });

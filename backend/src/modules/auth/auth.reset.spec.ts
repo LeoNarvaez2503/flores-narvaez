@@ -6,11 +6,14 @@ import { GoogleVerifierService } from './google-verifier.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { EmailService } from '../notifications/email.service';
 
+import { AuditPublisherService } from '../../audit-publisher/audit-publisher.service';
+
 describe('AuthService — recuperación de contraseña', () => {
   let service: AuthService;
   const prisma = { user: { findUnique: jest.fn(), findFirst: jest.fn(), update: jest.fn() } };
   const email = { sendPasswordReset: jest.fn().mockResolvedValue(true) };
   const config = { get: jest.fn().mockReturnValue('http://localhost:8081') };
+  const auditPublisher = { publishAuditEvent: jest.fn() };
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -23,6 +26,7 @@ describe('AuthService — recuperación de contraseña', () => {
         { provide: JwtService, useValue: { sign: jest.fn() } },
         { provide: EmailService, useValue: email },
         { provide: ConfigService, useValue: config },
+        { provide: AuditPublisherService, useValue: auditPublisher },
       ],
     }).compile();
     service = moduleRef.get(AuthService);
