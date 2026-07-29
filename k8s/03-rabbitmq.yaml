@@ -1,7 +1,3 @@
----
-# ═══════════════════════════════════════════════════════════
-# Deployment: RabbitMQ Message Broker
-# ═══════════════════════════════════════════════════════════
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -42,45 +38,35 @@ spec:
             - name: rabbitmq-data
               mountPath: /var/lib/rabbitmq
           readinessProbe:
-            exec:
-              command: ["rabbitmq-diagnostics", "-q", "ping"]
+            tcpSocket:
+              port: 5672
             initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 5
+            periodSeconds: 5
           livenessProbe:
-            exec:
-              command: ["rabbitmq-diagnostics", "-q", "ping"]
-            initialDelaySeconds: 30
-            periodSeconds: 15
-            timeoutSeconds: 5
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "250m"
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
+            tcpSocket:
+              port: 5672
+            initialDelaySeconds: 15
+            periodSeconds: 10
       volumes:
         - name: rabbitmq-data
           persistentVolumeClaim:
             claimName: rabbitmq-pvc
 ---
-# ═══════════════════════════════════════════════════════════
-# Service: RabbitMQ (ClusterIP)
-# ═══════════════════════════════════════════════════════════
 apiVersion: v1
 kind: Service
 metadata:
   name: rabbitmq-service
   namespace: default
+  labels:
+    app: rabbitmq
 spec:
   type: ClusterIP
+  ports:
+    - port: 5672
+      targetPort: 5672
+      name: amqp
+    - port: 15672
+      targetPort: 15672
+      name: management
   selector:
     app: rabbitmq
-  ports:
-    - name: amqp
-      port: 5672
-      targetPort: 5672
-    - name: management
-      port: 15672
-      targetPort: 15672

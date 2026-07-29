@@ -1,7 +1,3 @@
----
-# ═══════════════════════════════════════════════════════════
-# Deployment: Backend Principal CavaLocal (NestJS)
-# ═══════════════════════════════════════════════════════════
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -22,9 +18,10 @@ spec:
       containers:
         - name: backend
           image: cavalocal-backend:latest
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3001
+              name: http
           env:
             - name: PORT
               value: "3001"
@@ -32,7 +29,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: cavalocal-config
-                  key: DATABASE_URL
+                  key: DATABASE_URL_BACKEND
             - name: RABBITMQ_URL
               valueFrom:
                 configMapKeyRef:
@@ -43,55 +40,33 @@ spec:
                 secretKeyRef:
                   name: cavalocal-secrets
                   key: JWT_SECRET
-            - name: JWT_EXPIRES_IN
-              valueFrom:
-                configMapKeyRef:
-                  name: cavalocal-config
-                  key: JWT_EXPIRES_IN
             - name: CORS_ORIGINS
-              valueFrom:
-                configMapKeyRef:
-                  name: cavalocal-config
-                  key: CORS_ORIGINS
-            - name: NODE_ENV
-              valueFrom:
-                configMapKeyRef:
-                  name: cavalocal-config
-                  key: NODE_ENV
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 3001
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            timeoutSeconds: 5
+              value: "*"
           readinessProbe:
             httpGet:
               path: /health
               port: 3001
-            initialDelaySeconds: 5
+            initialDelaySeconds: 15
             periodSeconds: 5
-            timeoutSeconds: 3
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "250m"
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 20
+            periodSeconds: 10
 ---
-# ═══════════════════════════════════════════════════════════
-# Service: Backend Principal (ClusterIP)
-# ═══════════════════════════════════════════════════════════
 apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
   namespace: default
+  labels:
+    app: backend
 spec:
   type: ClusterIP
-  selector:
-    app: backend
   ports:
     - port: 3001
       targetPort: 3001
+      name: http
+  selector:
+    app: backend

@@ -1,31 +1,27 @@
----
-# ═══════════════════════════════════════════════════════════
-# Deployment: Microservicio de Auditoría (Express + Prisma + SSE)
-# 2 réplicas — requisito de evaluación (cola competitiva)
-# ═══════════════════════════════════════════════════════════
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: audit-deployment
   namespace: default
   labels:
-    app: audit-microservice
+    app: audit-service
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: audit-microservice
+      app: audit-service
   template:
     metadata:
       labels:
-        app: audit-microservice
+        app: audit-service
     spec:
       containers:
-        - name: audit
+        - name: audit-service
           image: cavalocal-audit:latest
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3002
+              name: http
           env:
             - name: PORT
               value: "3002"
@@ -33,46 +29,37 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: cavalocal-config
-                  key: AUDIT_DATABASE_URL
+                  key: DATABASE_URL_AUDIT
             - name: RABBITMQ_URL
               valueFrom:
                 configMapKeyRef:
                   name: cavalocal-config
                   key: RABBITMQ_URL
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 3002
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            timeoutSeconds: 5
           readinessProbe:
             httpGet:
               path: /health
               port: 3002
-            initialDelaySeconds: 5
+            initialDelaySeconds: 15
             periodSeconds: 5
-            timeoutSeconds: 3
-          resources:
-            requests:
-              memory: "128Mi"
-              cpu: "100m"
-            limits:
-              memory: "256Mi"
-              cpu: "250m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3002
+            initialDelaySeconds: 20
+            periodSeconds: 10
 ---
-# ═══════════════════════════════════════════════════════════
-# Service: Microservicio de Auditoría (ClusterIP)
-# ═══════════════════════════════════════════════════════════
 apiVersion: v1
 kind: Service
 metadata:
   name: audit-service
   namespace: default
+  labels:
+    app: audit-service
 spec:
   type: ClusterIP
-  selector:
-    app: audit-microservice
   ports:
     - port: 3002
       targetPort: 3002
+      name: http
+  selector:
+    app: audit-service

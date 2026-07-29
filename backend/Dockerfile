@@ -1,5 +1,6 @@
 # Stage 1: Builder
 FROM node:20-alpine AS builder
+RUN apk add --no-cache openssl
 WORKDIR /app
 
 RUN apk add --no-cache openssl
@@ -16,6 +17,7 @@ RUN npm run build
 
 # Stage 2: Runner
 FROM node:20-alpine AS runner
+RUN apk add --no-cache openssl
 WORKDIR /app
 
 RUN apk add --no-cache openssl
@@ -31,5 +33,5 @@ COPY --from=builder /app/node_modules/@prisma/client ./node_modules/@prisma/clie
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
 EXPOSE 3001
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main"]
+CMD ["sh", "-c", "npx prisma db push && node prisma/seed.js && node dist/src/main.js"]
 

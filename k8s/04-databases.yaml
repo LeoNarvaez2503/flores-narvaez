@@ -1,7 +1,4 @@
----
-# ═══════════════════════════════════════════════════════════
-# Deployment: PostgreSQL — Backend Principal (cavalocal)
-# ═══════════════════════════════════════════════════════════
+# PostgreSQL — Backend Principal (cavalocal)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,7 +17,7 @@ spec:
         app: postgres-backend
     spec:
       containers:
-        - name: postgres
+        - name: postgres-backend
           image: postgres:16-alpine
           ports:
             - containerPort: 5432
@@ -39,7 +36,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: cavalocal-secrets
-                  key: POSTGRES_DB
+                  key: POSTGRES_DB_BACKEND
           volumeMounts:
             - name: postgres-backend-data
               mountPath: /var/lib/postgresql/data
@@ -48,42 +45,32 @@ spec:
               command: ["pg_isready", "-U", "postgres"]
             initialDelaySeconds: 5
             periodSeconds: 5
-            timeoutSeconds: 3
           livenessProbe:
             exec:
               command: ["pg_isready", "-U", "postgres"]
             initialDelaySeconds: 15
             periodSeconds: 10
-            timeoutSeconds: 3
-          resources:
-            requests:
-              memory: "128Mi"
-              cpu: "100m"
-            limits:
-              memory: "256Mi"
-              cpu: "250m"
       volumes:
         - name: postgres-backend-data
           persistentVolumeClaim:
             claimName: postgres-backend-pvc
 ---
-# Service: PostgreSQL Backend
 apiVersion: v1
 kind: Service
 metadata:
   name: postgres-backend-service
   namespace: default
+  labels:
+    app: postgres-backend
 spec:
   type: ClusterIP
-  selector:
-    app: postgres-backend
   ports:
     - port: 5432
       targetPort: 5432
+  selector:
+    app: postgres-backend
 ---
-# ═══════════════════════════════════════════════════════════
-# Deployment: PostgreSQL — Microservicio de Auditoría (audit_db)
-# ═══════════════════════════════════════════════════════════
+# PostgreSQL — Microservicio de Auditoría (audit_db)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -102,7 +89,7 @@ spec:
         app: postgres-audit
     spec:
       containers:
-        - name: postgres
+        - name: postgres-audit
           image: postgres:16-alpine
           ports:
             - containerPort: 5432
@@ -121,7 +108,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: cavalocal-secrets
-                  key: POSTGRES_AUDIT_DB
+                  key: POSTGRES_DB_AUDIT
           volumeMounts:
             - name: postgres-audit-data
               mountPath: /var/lib/postgresql/data
@@ -130,35 +117,27 @@ spec:
               command: ["pg_isready", "-U", "postgres"]
             initialDelaySeconds: 5
             periodSeconds: 5
-            timeoutSeconds: 3
           livenessProbe:
             exec:
               command: ["pg_isready", "-U", "postgres"]
             initialDelaySeconds: 15
             periodSeconds: 10
-            timeoutSeconds: 3
-          resources:
-            requests:
-              memory: "128Mi"
-              cpu: "100m"
-            limits:
-              memory: "256Mi"
-              cpu: "250m"
       volumes:
         - name: postgres-audit-data
           persistentVolumeClaim:
             claimName: postgres-audit-pvc
 ---
-# Service: PostgreSQL Audit
 apiVersion: v1
 kind: Service
 metadata:
   name: postgres-audit-service
   namespace: default
+  labels:
+    app: postgres-audit
 spec:
   type: ClusterIP
-  selector:
-    app: postgres-audit
   ports:
     - port: 5432
       targetPort: 5432
+  selector:
+    app: postgres-audit
