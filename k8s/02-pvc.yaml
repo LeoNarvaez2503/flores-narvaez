@@ -1,0 +1,45 @@
+---
+# ═══════════════════════════════════════════════════════════
+# PVC: Base de datos del Backend Principal
+# ═══════════════════════════════════════════════════════════
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-backend-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# ═══════════════════════════════════════════════════════════
+# PVC: Base de datos del Microservicio de Auditoría
+# ═══════════════════════════════════════════════════════════
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-audit-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# ═══════════════════════════════════════════════════════════
+# PVC: Datos persistentes de RabbitMQ
+# ═══════════════════════════════════════════════════════════
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rabbitmq-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

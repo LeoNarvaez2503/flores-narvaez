@@ -1,0 +1,78 @@
+---
+# ═══════════════════════════════════════════════════════════
+# Deployment: Microservicio de Auditoría (Express + Prisma + SSE)
+# 2 réplicas — requisito de evaluación (cola competitiva)
+# ═══════════════════════════════════════════════════════════
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audit-deployment
+  namespace: default
+  labels:
+    app: audit-microservice
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: audit-microservice
+  template:
+    metadata:
+      labels:
+        app: audit-microservice
+    spec:
+      containers:
+        - name: audit
+          image: cavalocal-audit:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3002
+          env:
+            - name: PORT
+              value: "3002"
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cavalocal-config
+                  key: AUDIT_DATABASE_URL
+            - name: RABBITMQ_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cavalocal-config
+                  key: RABBITMQ_URL
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3002
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3002
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+---
+# ═══════════════════════════════════════════════════════════
+# Service: Microservicio de Auditoría (ClusterIP)
+# ═══════════════════════════════════════════════════════════
+apiVersion: v1
+kind: Service
+metadata:
+  name: audit-service
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: audit-microservice
+  ports:
+    - port: 3002
+      targetPort: 3002

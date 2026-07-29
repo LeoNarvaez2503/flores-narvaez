@@ -1,0 +1,97 @@
+---
+# ═══════════════════════════════════════════════════════════
+# Deployment: Backend Principal CavaLocal (NestJS)
+# ═══════════════════════════════════════════════════════════
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: default
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: cavalocal-backend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3001
+          env:
+            - name: PORT
+              value: "3001"
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cavalocal-config
+                  key: DATABASE_URL
+            - name: RABBITMQ_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: cavalocal-config
+                  key: RABBITMQ_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cavalocal-secrets
+                  key: JWT_SECRET
+            - name: JWT_EXPIRES_IN
+              valueFrom:
+                configMapKeyRef:
+                  name: cavalocal-config
+                  key: JWT_EXPIRES_IN
+            - name: CORS_ORIGINS
+              valueFrom:
+                configMapKeyRef:
+                  name: cavalocal-config
+                  key: CORS_ORIGINS
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: cavalocal-config
+                  key: NODE_ENV
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+---
+# ═══════════════════════════════════════════════════════════
+# Service: Backend Principal (ClusterIP)
+# ═══════════════════════════════════════════════════════════
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: backend
+  ports:
+    - port: 3001
+      targetPort: 3001
