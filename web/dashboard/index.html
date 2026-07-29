@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CavaLocal — Dashboard de Auditoría en Tiempo Real (SSE)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+  <div class="dashboard-container">
+    
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="brand-title">
+        <div class="brand-icon">🍷</div>
+        <div class="brand-text">
+          <h1>CavaLocal Audit Stream</h1>
+          <p>Monitorización de eventos en tiempo real vía Server-Sent Events (SSE)</p>
+        </div>
+      </div>
+
+      <div class="status-badge" id="statusBadge">
+        <span class="status-dot connecting" id="statusDot"></span>
+        <span id="statusText">Conectando SSE...</span>
+      </div>
+    </header>
+
+    <!-- Metrics Cards -->
+    <section class="metrics-grid">
+      <div class="metric-card">
+        <div class="label">Total Eventos</div>
+        <div class="value" id="metricTotal">0</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Eventos Vinos</div>
+        <div class="value" id="metricVinos">0</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Eventos Usuarios</div>
+        <div class="value" id="metricUsuarios">0</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Eventos Reservas</div>
+        <div class="value" id="metricReservas">0</div>
+      </div>
+      <div class="metric-card">
+        <div class="label">Eventos Pagos</div>
+        <div class="value" id="metricPagos">0</div>
+      </div>
+    </section>
+
+    <!-- Filters Bar -->
+    <section class="filter-card">
+      <div class="filter-group">
+        <label for="filterEntity">Entidad</label>
+        <select id="filterEntity" class="filter-control">
+          <option value="">Todas las Entidades</option>
+          <option value="vinos">Vinos</option>
+          <option value="tiendas">Tiendas</option>
+          <option value="usuarios">Usuarios</option>
+          <option value="reservas">Reservas</option>
+          <option value="pagos">Pagos</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="filterAction">Acción</label>
+        <select id="filterAction" class="filter-control">
+          <option value="">Todas las Acciones</option>
+          <option value="CREATE">CREATE (Creación)</option>
+          <option value="UPDATE">UPDATE (Actualización)</option>
+          <option value="DELETE">DELETE (Eliminación)</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="filterUser">Usuario (Email o ID)</label>
+        <input type="text" id="filterUser" class="filter-control" placeholder="Buscar por usuario...">
+      </div>
+
+      <button id="btnClearFilters" class="btn-clear">Limpiar Filtros</button>
+    </section>
+
+    <!-- Data Table -->
+    <main class="table-card">
+      <div class="table-responsive">
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Entidad</th>
+              <th>Acción</th>
+              <th>Usuario</th>
+              <th>Detalle de Datos</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="auditTableBody">
+            <tr id="emptyRow">
+              <td colspan="6" class="empty-state">Esperando eventos de auditoría en tiempo real...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- JSON Modal Viewer -->
+  <div class="modal-overlay" id="jsonModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Detalle de Auditoría</div>
+        <button class="modal-close" id="btnCloseModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="modalMeta" style="font-size: 0.85rem; color: var(--text-muted);"></div>
+
+        <div class="diff-grid">
+          <div class="diff-box">
+            <h4>Estado Previo (Before)</h4>
+            <pre class="json-code" id="modalBefore"></pre>
+          </div>
+          <div class="diff-box">
+            <h4>Estado Posterior (After)</h4>
+            <pre class="json-code" id="modalAfter"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

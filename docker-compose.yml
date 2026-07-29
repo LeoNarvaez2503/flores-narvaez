@@ -1,0 +1,113 @@
+services:
+  # Base de Datos PostgreSQL — Backend Principal
+  postgres-backend:
+    image: postgres:16-alpine
+    container_name: cavalocal-postgres-backend
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: cavalocal
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_backend_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Base de Datos PostgreSQL — Microservicio de Auditoría
+  postgres-audit:
+    image: postgres:16-alpine
+    container_name: cavalocal-postgres-audit
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: audit_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_audit_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # RabbitMQ Message Broker + Management UI
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: cavalocal-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"   # Puerto AMQP
+      - "15672:15672" # Puerto Web Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Backend Principal CavaLocal (NestJS)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: cavalocal-backend:latest
+    container_name: cavalocal-backend
+    environment:
+      PORT: 3001
+      DATABASE_URL: "postgresql://postgres:postgrespassword@postgres-backend:5432/cavalocal?schema=public"
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672"
+      JWT_SECRET: "clave-secreta-desarrollo-cavalocal"
+      JWT_EXPIRES_IN: "7d"
+      CORS_ORIGINS: "*"
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres-backend:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  # Microservicio de Auditoría (Express + Prisma + SSE)
+  audit-service:
+    build:
+      context: ./audit-service
+      dockerfile: Dockerfile
+    image: cavalocal-audit:latest
+    container_name: cavalocal-audit
+    environment:
+      PORT: 3002
+      DATABASE_URL: "postgresql://postgres:postgrespassword@postgres-audit:5432/audit_db?schema=public"
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672"
+    ports:
+      - "3002:3002"
+    depends_on:
+      postgres-audit:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  # Dashboard Web / Frontend (Nginx)
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    image: cavalocal-dashboard:latest
+    container_name: cavalocal-web
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+      - audit-service
+
+volumes:
+  postgres_backend_data:
+  postgres_audit_data:
+  rabbitmq_data:
