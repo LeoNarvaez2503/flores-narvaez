@@ -47,3 +47,12 @@ spec:
                 name: backend-service
                 port:
                   number: 3001
+
+          # Ruta principal (Frontend Web)
+          - path: /()(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dashboard-service
+                port:
+                  number: 80
