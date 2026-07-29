@@ -42,17 +42,15 @@ spec:
             - name: rabbitmq-data
               mountPath: /var/lib/rabbitmq
           readinessProbe:
-            exec:
-              command: ["rabbitmq-diagnostics", "-q", "ping"]
-            initialDelaySeconds: 10
+            tcpSocket:
+              port: 5672
+            initialDelaySeconds: 15
             periodSeconds: 10
-            timeoutSeconds: 5
           livenessProbe:
-            exec:
-              command: ["rabbitmq-diagnostics", "-q", "ping"]
+            tcpSocket:
+              port: 5672
             initialDelaySeconds: 30
-            periodSeconds: 15
-            timeoutSeconds: 5
+            periodSeconds: 20
           resources:
             requests:
               memory: "256Mi"
