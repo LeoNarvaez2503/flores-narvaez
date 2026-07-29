@@ -40,13 +40,20 @@ spec:
           readinessProbe:
             tcpSocket:
               port: 5672
-            initialDelaySeconds: 10
-            periodSeconds: 5
+            initialDelaySeconds: 15
+            periodSeconds: 10
           livenessProbe:
             tcpSocket:
               port: 5672
-            initialDelaySeconds: 15
-            periodSeconds: 10
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
       volumes:
         - name: rabbitmq-data
           persistentVolumeClaim:
