@@ -4,6 +4,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { configuration } from './config/configuration';
 import { validateEnv } from './config/env.validation';
 import { PrismaModule } from './prisma/prisma.module';
+import { AuditPublisherModule } from './audit-publisher/audit-publisher.module';
 import { HealthModule } from './modules/health/health.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
@@ -19,6 +20,7 @@ import { ReviewsModule } from './modules/reviews/reviews.module';
     }),
     ScheduleModule.forRoot(),
     PrismaModule,
+    AuditPublisherModule,
     HealthModule,
     AuthModule,
     CatalogModule,
@@ -27,3 +29,4 @@ import { ReviewsModule } from './modules/reviews/reviews.module';
   ],
 })
 export class AppModule {}
+

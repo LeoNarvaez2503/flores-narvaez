@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditPublisherService } from '../../audit-publisher/audit-publisher.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 
 const round1 = (n: number | null) => (n != null ? Math.round(n * 10) / 10 : null);
 
 @Injectable()
 export class ReviewsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly auditPublisher: AuditPublisherService,
+  ) {}
 
   async createOrUpdate(userId: string, dto: CreateReviewDto) {
     const existing = await this.prisma.review.findFirst({
@@ -18,6 +22,27 @@ export class ReviewsService {
       : await this.prisma.review.create({
           data: { userId, targetType: 'WINE', wineId: dto.wineId, ...data },
         });
+
+    // Obtener email del usuario para el evento de auditoría
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { email: true },
+    });
+
+    await this.auditPublisher.publishAuditEvent({
+      entity: 'vinos',
+      action: existing ? 'UPDATE' : 'CREATE',
+      userId,
+      userEmail: user?.email ?? 'unknown',
+      timestamp: new Date().toISOString(),
+      data: {
+        before: existing
+          ? { reviewId: existing.id, rating: existing.rating, comment: existing.comment, wineId: dto.wineId }
+          : null,
+        after: { reviewId: review.id, rating: review.rating, comment: review.comment, wineId: dto.wineId },
+      },
+    });
+
     const agg = await this.prisma.review.aggregate({
       where: { wineId: dto.wineId, targetType: 'WINE' },
       _avg: { rating: true },
@@ -50,3 +75,4 @@ export class ReviewsService {
     };
   }
 }
+

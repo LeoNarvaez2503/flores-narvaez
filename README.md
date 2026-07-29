@@ -1,5 +1,4 @@
-# CavaLocal (flores-narvaez)
-Examen - AppsDistribuidas - Parcial 3
+# CavaLocal
 
 Marketplace intermediario de vinos para Caracas: descubre etiquetas, compara precios entre tiendas y **reserva** en la más cercana pagando una **seña online**; la **factura llega por correo**.
 

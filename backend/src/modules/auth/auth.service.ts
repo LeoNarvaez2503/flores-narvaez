@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditPublisherService } from '../../audit-publisher/audit-publisher.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { GoogleVerifierService } from './google-verifier.service';
@@ -27,6 +28,7 @@ export class AuthService {
     private readonly googleVerifier: GoogleVerifierService,
     private readonly email: EmailService,
     private readonly config: ConfigService,
+    private readonly auditPublisher: AuditPublisherService,
   ) {}
 
   async register(dto: RegisterDto): Promise<AuthResult> {
@@ -38,6 +40,19 @@ export class AuthService {
     const user = await this.prisma.user.create({
       data: { name: dto.name.trim(), email, phone: dto.phone, passwordHash },
     });
+
+    await this.auditPublisher.publishAuditEvent({
+      entity: 'usuarios',
+      action: 'CREATE',
+      userId: user.id,
+      userEmail: user.email,
+      timestamp: new Date().toISOString(),
+      data: {
+        before: null,
+        after: { id: user.id, name: user.name, email: user.email, role: user.role },
+      },
+    });
+
     return this.buildResult(user);
   }
 
@@ -61,6 +76,18 @@ export class AuthService {
       const passwordHash = await bcrypt.hash(randomUUID(), 10);
       user = await this.prisma.user.create({
         data: { name: profile.name, email, googleId: profile.sub, passwordHash },
+      });
+
+      await this.auditPublisher.publishAuditEvent({
+        entity: 'usuarios',
+        action: 'CREATE',
+        userId: user.id,
+        userEmail: user.email,
+        timestamp: new Date().toISOString(),
+        data: {
+          before: null,
+          after: { id: user.id, name: user.name, email: user.email, role: user.role },
+        },
       });
     } else if (!user.googleId) {
       await this.prisma.user.update({ where: { id: user.id }, data: { googleId: profile.sub } });
@@ -104,6 +131,19 @@ export class AuthService {
       where: { id: user.id },
       data: { passwordHash, resetToken: null, resetTokenExpiresAt: null },
     });
+
+    await this.auditPublisher.publishAuditEvent({
+      entity: 'usuarios',
+      action: 'UPDATE',
+      userId: user.id,
+      userEmail: user.email,
+      timestamp: new Date().toISOString(),
+      data: {
+        before: { id: user.id, email: user.email, passwordReset: true },
+        after: { id: user.id, email: user.email, passwordReset: false },
+      },
+    });
+
     return { ok: true };
   }
 
@@ -127,3 +167,4 @@ export class AuthService {
     };
   }
 }
+
